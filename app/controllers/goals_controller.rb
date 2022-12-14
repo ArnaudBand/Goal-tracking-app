@@ -1,5 +1,6 @@
 class GoalsController < ApplicationController
   before_action :set_goal, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /goals or /goals.json
   def index
@@ -22,7 +23,7 @@ class GoalsController < ApplicationController
   # POST /goals or /goals.json
   def create
     @goal = Goal.new(goal_params)
-
+    @goal.user = current_user
     respond_to do |format|
       if @goal.save
         format.html { redirect_to goal_url(@goal), notice: "Goal was successfully created." }
@@ -65,6 +66,6 @@ class GoalsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def goal_params
-      params.require(:goal).permit(:name, :user_id)
+      params.require(:goal).permit(:name, :description)
     end
 end
